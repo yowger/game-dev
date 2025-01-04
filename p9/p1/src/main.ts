@@ -1,6 +1,14 @@
 const ANIMATION_TYPES = {
     IDLE: "IDLE",
     JUMP: "JUMP",
+    FALL: "FALL",
+    RUN: "RUN",
+    DIZZY: "DIZZY",
+    SIT: "SIT",
+    ROLL: "ROLL",
+    BITE: "BITE",
+    KO: "KO",
+    GET_HIT: "GET_HIT",
 } as const
 
 type ObjectValues<T> = T[keyof T]
@@ -38,14 +46,20 @@ playerImage.src = "./assets/shadow_dog.png"
 
 const spriteWidth = 575
 const spriteHeight = 523
-let frameX = 0
-let frameY = 0
 let gameFrame = 0
 const staggerFrames = 9
 const spriteAnimations: SpriteAnimations = {}
 const animationStates: AnimationState[] = [
     { name: ANIMATION_TYPES.IDLE, frames: 7 },
     { name: ANIMATION_TYPES.JUMP, frames: 7 },
+    { name: ANIMATION_TYPES.FALL, frames: 7 },
+    { name: ANIMATION_TYPES.RUN, frames: 9 },
+    { name: ANIMATION_TYPES.DIZZY, frames: 11 },
+    { name: ANIMATION_TYPES.SIT, frames: 5 },
+    { name: ANIMATION_TYPES.ROLL, frames: 7 },
+    { name: ANIMATION_TYPES.BITE, frames: 7 },
+    { name: ANIMATION_TYPES.KO, frames: 12 },
+    { name: ANIMATION_TYPES.GET_HIT, frames: 4 },
 ]
 // map animation frames
 animationStates.forEach((state, index) => {
@@ -66,14 +80,16 @@ function animate() {
     if (!context) throw new Error("context not found")
 
     let position =
-        Math.floor(gameFrame / staggerFrames) % spriteAnimations[""].loc.length
-    frameX = spriteWidth * position
+        Math.floor(gameFrame / staggerFrames) %
+        spriteAnimations[ANIMATION_TYPES.KO].loc.length
+    let frameX = spriteWidth * position
+    let frameY = spriteAnimations[ANIMATION_TYPES.KO].loc[position].y
 
     context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
     context.drawImage(
         playerImage,
         frameX,
-        frameY * spriteHeight,
+        frameY,
         spriteWidth,
         spriteHeight,
         0,
