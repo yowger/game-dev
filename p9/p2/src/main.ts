@@ -6,7 +6,8 @@ if (!context) throw new Error("context not found")
 
 const CANVAS_WIDTH = (canvas.width = 600)
 const CANVAS_HEIGHT = (canvas.height = 600)
-let gameSpeed = 2
+let gameSpeed = 5
+let gameFrame = 0
 
 const backgroundSources = [
     "./assets/images/layer-1.png",
@@ -37,7 +38,7 @@ class Layer {
     private speed: number
     private speedModifier: number
     private x: number
-    private x2: number
+    // private x2: number
     private y: number
     private width: number
     private height: number
@@ -53,7 +54,7 @@ class Layer {
         this.y = 0
         this.width = 2400
         this.height = 700
-        this.x2 = this.width
+        // this.x2 = this.width
         this.image = image
         this.speedModifier = speedModifier
         this.speed = gameSpeed * this.speedModifier
@@ -61,14 +62,15 @@ class Layer {
 
     update(gameSpeed: number) {
         this.speed = gameSpeed * this.speedModifier
-        if (this.x <= -this.width) {
-            this.x = this.width + this.x2 - this.speed
-        }
-        if (this.x2 <= -this.width) {
-            this.x2 = this.width + this.x - this.speed
-        }
-        this.x = Math.floor(this.x - this.speed)
-        this.x2 = Math.floor(this.x2 - this.speed)
+        // if (this.x <= -this.width) {
+        //     this.x = this.width + this.x2 - this.speed
+        // }
+        // if (this.x2 <= -this.width) {
+        //     this.x2 = this.width + this.x - this.speed
+        // }
+        // this.x = Math.floor(this.x - this.speed)
+        // this.x2 = Math.floor(this.x2 - this.speed)
+        this.x = (gameFrame * this.speed) % this.width
     }
 
     drawImage() {
@@ -81,7 +83,7 @@ class Layer {
         )
         this.context.drawImage(
             this.image,
-            this.x2,
+            this.x + this.width,
             this.y,
             this.width,
             this.height
@@ -110,6 +112,7 @@ async function init() {
                 layer.drawImage()
             })
 
+            gameFrame--
             window.requestAnimationFrame(animate)
         }
 
