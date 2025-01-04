@@ -11,6 +11,20 @@ const ANIMATION_TYPES = {
     GET_HIT: "GET_HIT",
 } as const
 
+let playerState: AnimationTypes = ANIMATION_TYPES.SIT
+
+const isAnimationType = (value: string): value is AnimationTypes => {
+    return Object.values(ANIMATION_TYPES).includes(value as AnimationTypes)
+}
+
+const dropDownEl = document.getElementById("animations") as HTMLSelectElement
+dropDownEl.addEventListener("change", (e: Event) => {
+    const value = (e.target as HTMLSelectElement).value
+    if (!isAnimationType(value)) return
+    
+    playerState = value
+})
+
 type ObjectValues<T> = T[keyof T]
 
 type AnimationTypes = ObjectValues<typeof ANIMATION_TYPES>
@@ -46,6 +60,7 @@ playerImage.src = "./assets/shadow_dog.png"
 
 const spriteWidth = 575
 const spriteHeight = 523
+
 let gameFrame = 0
 const staggerFrames = 9
 const spriteAnimations: SpriteAnimations = {}
@@ -81,9 +96,9 @@ function animate() {
 
     let position =
         Math.floor(gameFrame / staggerFrames) %
-        spriteAnimations[ANIMATION_TYPES.KO].loc.length
+        spriteAnimations[playerState].loc.length
     let frameX = spriteWidth * position
-    let frameY = spriteAnimations[ANIMATION_TYPES.KO].loc[position].y
+    let frameY = spriteAnimations[playerState].loc[position].y
 
     context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
     context.drawImage(

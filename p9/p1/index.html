@@ -1,2 +1,29 @@
-<canvas id="canvas" style="border: 1px solid black"></canvas>
-<script src="src/main.ts"></script>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="src/style.css" />
+        <title>Doggo animation</title>
+    </head>
+    <body>
+        <div class="controls">
+            <label for="animations">Choose Animation:</label>
+            <select name="animations" id="animations">
+                <option value="IDLE">Idle</option>
+                <option value="JUMP">Jump</option>
+                <option value="FALL">Fall</option>
+                <option value="RUN">Run</option>
+                <option value="DIZZY">Dizzy</option>
+                <option value="SIT">Sit</option>
+                <option value="ROLL">Roll</option>
+                <option value="BITE">Bite</option>
+                <option value="KO">KO</option>
+                <option value="GET_HIT">Get Hit</option>
+            </select>
+        </div>
+
+        <canvas id="canvas" style="border: 1px solid black"></canvas>
+
+        <script src="src/main.ts"></script>
+    </body>
+</html>
