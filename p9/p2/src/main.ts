@@ -91,12 +91,16 @@ class Layer {
 
 async function init() {
     try {
+        console.time("loadAssets")
+
         const images = await preloadImages(backgroundSources)
         const layerSpeed = [0.2, 0.4, 0.6, 0.8, 1]
         const layers = images.map(
             (image, index) =>
                 new Layer(context, image, gameSpeed, layerSpeed[index])
         )
+
+        console.timeEnd("loadAssets")
 
         function animate() {
             context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
