@@ -6,19 +6,30 @@ if (!context) throw new Error("context not found")
 
 const CANVAS_WIDTH = (canvas.width = 600)
 const CANVAS_HEIGHT = (canvas.height = 600)
-let gameSpeed = 5
+let gameSpeed = 2
 
-const backgroundLayer1 = new Image()
-const backgroundLayer2 = new Image()
-const backgroundLayer3 = new Image()
-const backgroundLayer4 = new Image()
-const backgroundLayer5 = new Image()
+const backgroundSources = [
+    "./assets/images/layer-1.png",
+    "./assets/images/layer-2.png",
+    "./assets/images/layer-3.png",
+    "./assets/images/layer-4.png",
+    "./assets/images/layer-5.png",
+]
 
-backgroundLayer1.src = "./assets/images/layer-1.png"
-backgroundLayer2.src = "./assets/images/layer-2.png"
-backgroundLayer3.src = "./assets/images/layer-3.png"
-backgroundLayer4.src = "./assets/images/layer-4.png"
-backgroundLayer5.src = "./assets/images/layer-5.png"
+async function preloadImages(sources: string[]): Promise<HTMLImageElement[]> {
+    return Promise.all(
+        sources.map(
+            (src) =>
+                new Promise<HTMLImageElement>((resolve, reject) => {
+                    const img = new Image()
+                    img.src = src
+                    img.onload = () => resolve(img)
+                    img.onerror = () =>
+                        reject(new Error(`Failed to load image: ${src}`))
+                })
+        )
+    )
+}
 
 class Layer {
     private context: CanvasRenderingContext2D
@@ -78,18 +89,30 @@ class Layer {
     }
 }
 
-const layer4 = new Layer(context, backgroundLayer4, gameSpeed, 0.2)
-const layer5 = new Layer(context, backgroundLayer5, gameSpeed, 0.5)
+async function init() {
+    try {
+        const images = await preloadImages(backgroundSources)
+        const layerSpeed = [0.2, 0.4, 0.6, 0.8, 1]
+        const layers = images.map(
+            (image, index) =>
+                new Layer(context, image, gameSpeed, layerSpeed[index])
+        )
 
-function animate() {
-    context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+        function animate() {
+            context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
-    layer4.update(gameSpeed)
-    layer4.drawImage()
-    layer5.update(gameSpeed)
-    layer5.drawImage()
+            layers.forEach((layer) => {
+                layer.update(gameSpeed)
+                layer.drawImage()
+            })
 
-    window.requestAnimationFrame(animate)
+            window.requestAnimationFrame(animate)
+        }
+
+        animate()
+    } catch (error) {
+        console.log("failed to initialize game: ", error)
+    }
 }
 
-animate()
+init()
